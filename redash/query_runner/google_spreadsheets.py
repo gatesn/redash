@@ -1,4 +1,5 @@
 import logging
+import os
 from base64 import b64decode
 
 from dateutil import parser
@@ -166,16 +167,39 @@ class GoogleSpreadsheet(BaseQueryRunner):
     def configuration_schema(cls):
         return {
             "type": "object",
-            "properties": {"jsonKeyFile": {"type": "string", "title": "JSON Key File"}},
-            "required": ["jsonKeyFile"],
-            "secret": ["jsonKeyFile"],
+            "properties": {},
+            "required": [],
+        }
+
+    @classmethod
+    def oauth_configuration(cls):
+        return {
+            "client_id": os.environ["GOOGLE_CLIENT_ID"],
+            "client_secret": os.environ["GOOGLE_CLIENT_SECRET"],
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "scopes": ['https://www.googleapis.com/auth/spreadsheets.readonly'],
         }
 
     def _get_spreadsheet_service(self):
         scope = ["https://spreadsheets.google.com/feeds"]
 
-        key = json_loads(b64decode(self.configuration["jsonKeyFile"]))
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(key, scope)
+        from oauth2client.client import OAuth2Credentials
+
+        oauth_config = self.oauth_configuration()
+
+        creds = OAuth2Credentials(
+            access_token=self.configuration['access_token'],
+            client_id=oauth_config['client_id'],
+            client_secret=oauth_config['client_secret'],
+            refresh_token=self.configuration['refresh_token'],
+            token_expiry=self.configuration['expires_at'],
+            token_uri=oauth_config['token_uri'],
+            scopes=oauth_config['scopes'],
+            user_agent='redash',
+        )
+
+        print("CONFIG", oauth_config, self.configuration, creds)
 
         timeout_session = Session()
         timeout_session.requests_session = TimeoutSession()
@@ -191,6 +215,9 @@ class GoogleSpreadsheet(BaseQueryRunner):
         except APIError as e:
             message = parse_api_error(e)
             raise Exception(message)
+
+    def get_schema(self, get_stats=False):
+        return super().get_schema(get_stats)
 
     def run_query(self, query, user):
         logger.debug("Spreadsheet is about to execute query: %s", query)

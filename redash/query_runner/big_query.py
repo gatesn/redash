@@ -17,7 +17,7 @@ try:
     import apiclient.errors
     from apiclient.discovery import build
     from apiclient.errors import HttpError
-    from oauth2client.service_account import ServiceAccountCredentials
+    from google.oauth2.service_account import Credentials
 
     enabled = True
 except ImportError:
@@ -146,11 +146,9 @@ class BigQuery(BaseQueryRunner):
 
         key = json_loads(b64decode(self.configuration["jsonKeyFile"]))
 
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(key, scope)
-        http = httplib2.Http(timeout=settings.BIGQUERY_HTTP_TIMEOUT)
-        http = creds.authorize(http)
+        creds = Credentials.from_service_account_info(key).with_scopes(scope)
 
-        return build("bigquery", "v2", http=http, cache_discovery=False)
+        return build("bigquery", "v2", credentials=creds, cache_discovery=False)
 
     def _get_project_id(self):
         return self.configuration["projectId"]
@@ -283,7 +281,8 @@ class BigQuery(BaseQueryRunner):
         return result
 
     def get_schema(self, get_stats=False):
-        if not self.configuration.get("loadSchema", False):
+        raise Exception(f"No schema {self.configuration}")
+        if not self.configuration.options.get("loadSchema", False):
             return []
 
         project_id = self._get_project_id()

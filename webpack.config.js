@@ -255,7 +255,7 @@ const config = {
           "/setup",
           "/status.json",
           "/api",
-          "/oauth"
+          "/oauth",
         ],
         target: redashBackend + "/",
         changeOrigin: false,

@@ -103,13 +103,27 @@ class EditDataSource extends React.Component {
     const { dataSource, type } = this.state;
     const fields = helper.getFields(type, dataSource);
     const helpTriggerType = `DS_${toUpper(type.type)}`;
+
+    const actions = [
+      { name: "Delete", type: "danger", callback: this.deleteDataSource },
+      { name: "Test Connection", pullRight: true, callback: this.testConnection, disableWhenDirty: true },
+    ]
+
+    console.error("DATASOURCE", dataSource, type);
+    if (type.is_oauth) {
+      console.error("OAUTH");
+      actions.push({
+        name: "Refresh OAuth",
+        pullRight: true,
+        callback: () => window.location = `oauth/data_sources/${dataSource.id}/authorize`,
+        disableWhenDirty: false,
+      });
+    }
+
     const formProps = {
       fields,
       type,
-      actions: [
-        { name: "Delete", type: "danger", callback: this.deleteDataSource },
-        { name: "Test Connection", pullRight: true, callback: this.testConnection, disableWhenDirty: true },
-      ],
+      actions,
       onSubmit: this.saveDataSource,
       feedbackIcons: true,
       defaultShowExtraFields: helper.hasFilledExtraField(type, dataSource),

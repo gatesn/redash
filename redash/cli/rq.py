@@ -45,7 +45,7 @@ def worker(queues):
         queues = chain(*[queue.split(",") for queue in queues])
 
     with Connection(rq_redis_connection):
-        w = Worker(queues, log_job_description=False, job_monitoring_interval=5)
+        w = Worker(queues, log_job_description=True, job_monitoring_interval=5)
         w.work()
 
 

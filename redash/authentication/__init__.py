@@ -7,6 +7,8 @@ from urllib.parse import urlsplit, urlunsplit
 
 from flask import jsonify, redirect, request, url_for, session
 from flask_login import LoginManager, login_user, logout_user, user_logged_in
+from redash.authentication.data_sources import create_data_sources_oauth_blueprint
+
 from redash import models, settings
 from redash.authentication import jwt_auth
 from redash.authentication.org_resolving import current_org
@@ -262,7 +264,13 @@ def init_app(app):
     from redash.security import csrf
 
     # Authlib's flask oauth client requires a Flask app to initialize
-    for blueprint in [create_google_oauth_blueprint(app), saml_auth.blueprint, remote_user_auth.blueprint, ldap_auth.blueprint, ]:
+    for blueprint in [
+            create_data_sources_oauth_blueprint(),
+            create_google_oauth_blueprint(app),
+            saml_auth.blueprint,
+            remote_user_auth.blueprint,
+            ldap_auth.blueprint,
+    ]:
         csrf.exempt(blueprint)
         app.register_blueprint(blueprint)
 

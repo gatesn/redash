@@ -194,6 +194,10 @@ class BaseQueryRunner(object):
     def configuration_schema(cls):
         return {}
 
+    @classmethod
+    def oauth_configuration(cls):
+        return {}
+
     def annotate_query(self, query, metadata):
         if not self.should_annotate_query:
             return query
@@ -254,6 +258,7 @@ class BaseQueryRunner(object):
             "name": cls.name(),
             "type": cls.type(),
             "configuration_schema": cls.configuration_schema(),
+            **({"is_oauth": True} if cls.oauth_configuration() else {}),
             **({"deprecated": True} if cls.deprecated else {}),
         }
 

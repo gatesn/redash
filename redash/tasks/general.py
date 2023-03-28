@@ -86,6 +86,7 @@ def get_schema(data_source_id, refresh):
             }
         }
     except Exception as e:
+        logger.error("Error retrieving schema", e)
         return {"error": {"code": 2, "message": "Error retrieving schema", "details": str(e)}}
 
 

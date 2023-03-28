@@ -98,9 +98,15 @@ class DataSourcesList extends React.Component {
     helper.updateTargetWithValues(target, values);
 
     return DataSource.create(target).then(dataSource => {
-      this.setState({ loading: true });
-      DataSource.query().then(dataSources => this.setState({ dataSources, loading: false }));
-      return dataSource;
+      this.setState({loading: true});
+
+      if (selectedType.is_oauth) {
+        window.location = `oauth/data_sources/${dataSource.id}/authorize`;
+        throw Error("Redirecting for OAuth flow")
+      } else {
+        DataSource.query().then(dataSources => this.setState({dataSources, loading: false}));
+        return dataSource;
+      }
     });
   };
 
@@ -118,12 +124,12 @@ class DataSourcesList extends React.Component {
       .onClose((result = {}) => {
         this.newDataSourceDialog = null;
         if (result.success) {
-          navigateTo(`data_sources/${result.data.id}`);
+          //navigateTo(`data_sources/${result.data.id}`);
         }
       })
       .onDismiss(() => {
         this.newDataSourceDialog = null;
-        navigateTo("data_sources", true);
+        //navigateTo("data_sources", true);
       });
   };
 

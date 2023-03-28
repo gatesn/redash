@@ -27,6 +27,8 @@ defineDummySnippets("sql");
 defineDummySnippets("json");
 defineDummySnippets("yaml");
 
+ace.define("ace/mode/custom", [], () => {});
+
 function buildTableColumnKeywords(table) {
   const keywords = [];
   table.columns.forEach(column => {

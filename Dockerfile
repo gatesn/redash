@@ -1,4 +1,4 @@
-FROM node:14.17 as frontend-builder
+FROM node:16.19 as frontend-builder
 
 RUN npm install --global --force yarn@1.22.10
 
@@ -25,7 +25,7 @@ COPY --chown=redash client /frontend/client
 COPY --chown=redash webpack.config.js /frontend/
 RUN if [ "x$skip_frontend_build" = "x" ] ; then yarn build; else mkdir -p /frontend/client/dist && touch /frontend/client/dist/multi_org.html && touch /frontend/client/dist/index.html; fi
 
-FROM python:3.7-slim-buster
+FROM python:3.9-slim-buster
 
 EXPOSE 5000
 

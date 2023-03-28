@@ -17,6 +17,7 @@ client/dist
 _build
 .vscode
 .env
+env39
 
 dump.rdb
 
@@ -27,3 +28,6 @@ npm-debug.log
 
 client/cypress/screenshots
 client/cypress/videos
+
+.envrc
+.python-version

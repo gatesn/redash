@@ -120,7 +120,7 @@ function DynamicFormActions({ actions, isFormDirty }) {
     <Button
       key={action.name}
       htmlType="button"
-      className={cx("m-t-10", { "pull-right": action.pullRight })}
+      className={cx("m-t-10", { "pull-right m-l-10": action.pullRight })}
       type={action.type}
       disabled={isFormDirty && action.disableWhenDirty}
       loading={inProgressActions.has(action.name)}

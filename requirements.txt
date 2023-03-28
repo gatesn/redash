@@ -31,7 +31,7 @@ pyparsing==2.3.0
 SQLAlchemy-Utils==0.34.2
 sqlparse==0.3.0
 statsd==3.3.0
-greenlet==0.4.16
+greenlet
 gunicorn==20.0.4
 rq==1.5.0
 rq-scheduler==0.9.1
@@ -44,7 +44,7 @@ funcy==1.13
 sentry-sdk>=0.14.3,<0.15.0
 semver==2.8.1
 xlsxwriter==1.2.2
-pystache==0.5.4
+pystache==0.6.0
 parsedatetime==2.4
 PyJWT==1.7.1
 cryptography==2.8
@@ -54,7 +54,7 @@ user-agents==2.0
 maxminddb-geolite2==2018.703
 pypd==1.1.0
 disposable-email-domains>=0.0.52
-gevent==1.4.0
+gevent
 sshtunnel==0.1.5
 supervisor==4.1.0
 supervisor_checks==0.8.1
@@ -64,3 +64,6 @@ werkzeug==0.16.1
 # ldap3==2.2.4
 Authlib==0.15.5
 advocate==1.0.0
+
+
+scandal==0.1.9
